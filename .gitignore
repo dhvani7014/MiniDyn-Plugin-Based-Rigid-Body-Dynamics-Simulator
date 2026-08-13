@@ -1,0 +1,20 @@
+# C++ Build outputs
+build/
+minidyn_demo
+
+# macOS system files
+.DS_Store
+
+# Simulation outputs
+pendulum_trace.csv
+pendulum_simulation_plot.png
+
+# Web development
+web/node_modules/
+web/.next/
+web/out/
+web/.env*.local
+
+# IDEs
+.vscode/
+.idea/
