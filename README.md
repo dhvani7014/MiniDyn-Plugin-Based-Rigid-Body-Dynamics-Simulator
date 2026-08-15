@@ -4,7 +4,7 @@ MiniDyn is a high performance, object-oriented 3D multibody dynamics (MBD) physi
 
 Additionally, the project compiles the core C++ physics engine to **WebAssembly** via Emscripten to drive a real time, interactive simulation dashboard in the browser using a Next.js React frontend.
 
-**Live Demo**: [https://mini-dyn-plugin-based-rigid-body-dynamics-sim-git-c01028-dd7014.vercel.app/](https://mini-dyn-plugin-based-rigid-body-dynamics-sim-git-c01028-dd7014.vercel.app/)
+**Live Demo**: https://minidyn.vercel.app/
 
 ## Features
 
