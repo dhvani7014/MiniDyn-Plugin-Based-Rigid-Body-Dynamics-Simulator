@@ -18,6 +18,7 @@ export default function Home() {
   const [wasmReady, setWasmReady] = useState(false);
 
   const lastTime = useRef<number | null>(null);
+  const lastDisplayUpdate = useRef<number | null>(null);
   const simRef = useRef<any>(null);
 
   // Dynamically load the WebAssembly helper script
@@ -99,18 +100,23 @@ export default function Home() {
         // Step the actual C++ MiniDyn engine
         sim.step(dt);
 
+        // Always update the pendulum angle for smooth animation
         const sx = sim.getX();
         const sy = sim.getY();
-        const sEnergy = sim.getEnergy();
-        const sError = sim.getConstraintError();
         const sAngle = Math.atan2(sx, -sy);
-
-        setX(sx);
-        setY(sy);
         setAngle(sAngle);
-        setEnergy(sEnergy);
-        setConstraintError(sError);
-        setTime((prev) => prev + dt);
+
+        // Throttle numeric displays to ~10fps so they're readable
+        if (!lastDisplayUpdate.current || timestamp - lastDisplayUpdate.current > 100) {
+          lastDisplayUpdate.current = timestamp;
+          const sEnergy = sim.getEnergy();
+          const sError = sim.getConstraintError();
+          setX(sx);
+          setY(sy);
+          setEnergy(sEnergy);
+          setConstraintError(sError);
+          setTime((prev) => prev + dt);
+        }
       }
 
       frame = requestAnimationFrame(animate);
@@ -336,11 +342,11 @@ export default function Home() {
               </div>
 
               <span className={`rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-wider ${
-                Math.abs(constraintError) < 1e-4 
+                Math.abs(constraintError) < 5e-2 
                   ? 'border-emerald-900 bg-emerald-950/40 text-emerald-400' 
                   : 'border-amber-900 bg-amber-950/40 text-amber-400'
               }`}>
-                {Math.abs(constraintError) < 1e-4 ? 'Stable' : 'Correcting'}
+                {Math.abs(constraintError) < 5e-2 ? 'Stable' : 'Correcting'}
               </span>
             </div>
 
