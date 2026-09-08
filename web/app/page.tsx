@@ -19,6 +19,7 @@ export default function Home() {
 
   const lastTime = useRef<number | null>(null);
   const lastDisplayUpdate = useRef<number | null>(null);
+  const simTimeRef = useRef<number>(0);
   const simRef = useRef<any>(null);
 
   // Dynamically load the WebAssembly helper script
@@ -69,6 +70,7 @@ export default function Home() {
     setX(sx);
     setY(sy);
     setAngle(0.28);
+    simTimeRef.current = 0;
     setTime(0);
     setEnergy(sEnergy);
     setConstraintError(sError);
@@ -99,6 +101,7 @@ export default function Home() {
       if (sim) {
         // Step the actual C++ MiniDyn engine
         sim.step(dt);
+        simTimeRef.current += dt;
 
         // Always update the pendulum angle for smooth animation
         const sx = sim.getX();
@@ -115,7 +118,7 @@ export default function Home() {
           setY(sy);
           setEnergy(sEnergy);
           setConstraintError(sError);
-          setTime((prev) => prev + dt);
+          setTime(simTimeRef.current);
         }
       }
 
